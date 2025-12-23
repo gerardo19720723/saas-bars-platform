@@ -1,0 +1,75 @@
+services:
+  # Infra
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: saasuser
+      POSTGRES_PASSWORD: saaspass
+      POSTGRES_DB: sbars_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-net
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - app-net
+
+  nats:
+    image: nats:2.10-alpine
+    ports:
+      - "4222:4222"
+      - "8222:8222" # monitoring
+    networks:
+      - app-net
+
+  # Microservicios
+  gateway:
+    build: ./apps/gateway
+    env_file: .env.docker
+    ports:
+      - "3000:3000"
+    depends_on: [nats]
+    networks:
+      - app-net
+
+  auth:
+    build: ./apps/auth
+    env_file: .env.docker
+    environment:
+      - AUTH_PORT=3001
+    depends_on: [postgres, nats]
+    networks:
+      - app-net
+
+  catalog:
+    build: ./apps/catalog
+    env_file: .env.docker
+    environment:
+      - CATALOG_PORT=3002
+    depends_on: [postgres, nats]
+    networks:
+      - app-net
+
+  inventory:
+    build: ./apps/inventory
+    env_file: .env.docker
+    environment:
+      - INVENTORY_PORT=3003
+    depends_on: [postgres, nats, redis]
+    networks:
+      - app-net
+
+  # ... otros servicios (notifications, loyalty, etc.)
+
+networks:
+  app-net:
+    driver: bridge
+
+volumes:
+  postgres_data:
