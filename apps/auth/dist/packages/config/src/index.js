@@ -6,3 +6,4 @@ export const AuthConfig = z.object({
     DATABASE_URL: z.string().url(),
     NATS_URL: z.string().default('nats://localhost:4222'),
 });
+//# sourceMappingURL=index.js.map

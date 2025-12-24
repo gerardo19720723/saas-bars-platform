@@ -1,0 +1,2 @@
+"// Tipos compartidos";
+export {};

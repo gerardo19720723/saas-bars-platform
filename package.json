@@ -1,0 +1,11 @@
+{
+  "name": "saas-bars-platform",
+  "private": true,
+  "scripts": {
+    "build": "pnpm --filter @saasbars/config build && pnpm --filter @saasbars/messaging build && pnpm --filter @saasbars/types build && pnpm --filter @saasbars/db build && pnpm --filter @saasbars/auth build"
+  },
+  "devDependencies": {
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}

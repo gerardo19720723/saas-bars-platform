@@ -1,8 +1,9 @@
 {
-    "extends": "../../tsconfig.base.json",
-  "compilerOptions": {
-    "outDir": "./dist"
+   "extends": "../../tsconfig.base.json",
+   "compilerOptions": {
+   "outDir": "./dist",
+   "module": "NodeNext",
+   "moduleResolution": "NodeNext" 
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules"]
+  "include": ["src/**/*"]
 }

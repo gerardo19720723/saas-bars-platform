@@ -2,10 +2,10 @@
 import '@fastify/jwt';
 
 declare module 'fastify' {
-  interface FastifyInstance {
-    // Ya está cubierto por @fastify/jwt
-  }
   interface FastifyRequest {
-    jwt: any; // o tipado completo si lo prefieres
+    jwt: {
+      sign: (payload: any, options?: any) => Promise<string>;
+      verify: (token: string) => Promise<any>;
+    };
   }
 }

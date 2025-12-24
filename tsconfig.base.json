@@ -1,5 +1,5 @@
 {
-  "compilerOptions": {
+   "compilerOptions": {
     "target": "ES2022",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
@@ -9,6 +9,9 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "baseUrl": ".",
+    "outDir": "./dist",
+    "declaration": true,
+    "sourceMap": true,
     "paths": {
       "@saasbars/config": ["packages/config/src/index.ts"],
       "@saasbars/db": ["packages/db/src/index.ts"],

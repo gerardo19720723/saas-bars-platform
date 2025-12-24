@@ -6,3 +6,4 @@ export async function connectNats(url) {
 export const TOPICS = {
     AUTH_USER_CREATED: 'auth.user.created',
 };
+//# sourceMappingURL=index.js.map
