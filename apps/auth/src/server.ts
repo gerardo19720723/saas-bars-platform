@@ -1,7 +1,7 @@
 import Fastify from 'fastify';
 import { AuthConfig } from '@saasbars/config';
 import { connectNats } from '@saasbars/messaging';
-import authRoutes from './routes/auth.routes';
+import authRoutes from './routes/auth.routes.js';
 
 const config = AuthConfig.parse(process.env);
 
@@ -32,7 +32,7 @@ const start = async () => {
   try {
     await fastify.listen({ port: config.AUTH_PORT, host: '0.0.0.0' });
   } catch (err) {
-    fastify.log.error(err);
+    console.error('Server start error');
     process.exit(1);
   }
 };

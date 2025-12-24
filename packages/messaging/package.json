@@ -1,0 +1,10 @@
+{
+  "name": "@saasbars/messaging",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "type": "module",
+  "dependencies": {
+    "nats": "^2.22.0"
+  }
+}

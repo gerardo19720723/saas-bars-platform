@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "esModuleInterop": false,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@saasbars/config": ["packages/config/src/index.ts"],
+      "@saasbars/db": ["packages/db/src/index.ts"],
+      "@saasbars/messaging": ["packages/messaging/src/index.ts"],
+      "@saasbars/types": ["packages/types/src/index.ts"]
+    }
+  },
+  "files": [],
+  "references": [
+    { "path": "./apps/auth" },
+    { "path": "./packages/config" },
+    { "path": "./packages/db" },
+    { "path": "./packages/messaging" },
+    { "path": "./packages/types" }
+  ]
+}
