@@ -1,22 +1,15 @@
-FROM node:lts-alpine AS base
+# apps/auth/Dockerfile
+FROM node:20-alpine
+
 WORKDIR /app
-RUN npm install -g pnpm
 
-FROM base AS deps
-COPY pnpm-lock.yaml ./
-COPY packages packages
-COPY apps/auth/package.json apps/auth/package.json
-RUN pnpm fetch --prod
-
-FROM base AS build
-COPY --from=deps /app/node_modules /app/node_modules
+# Copia TODO excepto node_modules (gracias a .dockerignore)
 COPY . .
-RUN pnpm run --filter auth build
 
-FROM base
-COPY --from=build /app/dist/apps/auth ./dist
-COPY --from=build /app/node_modules ./node_modules
-COPY apps/auth/package.json ./
-ENV NODE_ENV=production
+# Instala TODAS las dependencias (sin --prod, para tener tsc)
+RUN CI=true npm install -g pnpm && \
+    CI=true pnpm install && \
+    CI=true pnpm run -C apps/auth build
+
 EXPOSE 3001
-CMD ["node", "dist/server.js"]
+CMD ["node", "apps/auth/dist/server.js"]

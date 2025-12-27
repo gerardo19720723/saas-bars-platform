@@ -1,75 +1,46 @@
+# ~/saas-bars-platform/docker-compose.yaml
+
 services:
-  # Infra
+  # NATS - sistema de mensajería
+  nats:
+    image: nats:2.10
+    container_name: saasbars-nats
+    ports:
+      - "4222:4222"   # Client port
+      - "8222:8222"   # Monitoring port   
+  # PostgreSQL - base de datos
   postgres:
-    image: postgres:16-alpine
-    environment:
-      POSTGRES_USER: saasuser
-      POSTGRES_PASSWORD: saaspass
-      POSTGRES_DB: sbars_dev
+    image: postgres:16
+    container_name: saasbars-postgres
     ports:
       - "5432:5432"
+    environment:
+      POSTGRES_DB: saasbars
+      POSTGRES_USER: saasbars
+      POSTGRES_PASSWORD: saasbars
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - app-net
+      - postgres_:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U saasbars -d saasbars"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  redis:
-    image: redis:7-alpine
-    ports:
-      - "6379:6379"
-    networks:
-      - app-net
-
-  nats:
-    image: nats:2.10-alpine
-    ports:
-      - "4222:4222"
-      - "8222:8222" # monitoring
-    networks:
-      - app-net
-
-  # Microservicios
-  gateway:
-    build: ./apps/gateway
-    env_file: .env.docker
-    ports:
-      - "3000:3000"
-    depends_on: [nats]
-    networks:
-      - app-net
-
+  # Auth service
   auth:
-    build: ./apps/auth
-    env_file: .env.docker
+    build:
+      context: .
+      dockerfile: apps/auth/Dockerfile
+    container_name: saasbars-auth
+    ports:
+      - "3001:3001"
     environment:
       - AUTH_PORT=3001
-    depends_on: [postgres, nats]
-    networks:
-      - app-net
-
-  catalog:
-    build: ./apps/catalog
-    env_file: .env.docker
-    environment:
-      - CATALOG_PORT=3002
-    depends_on: [postgres, nats]
-    networks:
-      - app-net
-
-  inventory:
-    build: ./apps/inventory
-    env_file: .env.docker
-    environment:
-      - INVENTORY_PORT=3003
-    depends_on: [postgres, nats, redis]
-    networks:
-      - app-net
-
-  # ... otros servicios (notifications, loyalty, etc.)
-
-networks:
-  app-net:
-    driver: bridge
-
+      - JWT_SECRET=supersecret_jwt_key_32chars_exactly!!
+      - DATABASE_URL=postgresql://saasbaras:saasbars@localhost:5432/saasbars
+      - NATS_URL=nats://nats:4222
+    depends_on:
+    - nats
+    - postgres
 volumes:
-  postgres_data:
+  postgres_:

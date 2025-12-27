@@ -1,6 +1,7 @@
 // apps/auth/src/controllers/auth.controller.ts
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { z } from 'zod';
+import { TOPICS } from '@saasbars/messaging';
 
 const registerSchema = z.object({
   email: z.string().email(),
@@ -16,7 +17,6 @@ const loginSchema = z.object({
 
 export async function registerHandler(req: FastifyRequest, rep: FastifyReply) {
   const { email, password, tenantId } = registerSchema.parse(req.body);
-  return rep.status(201).send({ message: 'User registered (mock)' });
 }
 
 export async function loginHandler(req: FastifyRequest, rep: FastifyReply) {
